@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
 
-namespace RealEstate.Api.Controller;
+namespace RealEstate.Api.Controllers;
 [ApiController]
 [ApiVersion(1)]
 [ApiVersion(2)]

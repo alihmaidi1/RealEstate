@@ -10,4 +10,6 @@ public interface IUnitOfWork
 {
     Task CommitAsync(CancellationToken cancellationToken);
     
+    Task CommitWithDomainEventAsync(CancellationToken cancellationToken);
+
 }
