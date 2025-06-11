@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -23,8 +23,8 @@ public class RealEstateDbContext : DbContext
         builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
     }
-    
-    public DbSet<OutBoxMessage> OutBoxMessages{get;init;}
 
-    
+    public DbSet<OutBoxMessage> OutBoxMessages { get; init; }
+
+
 }

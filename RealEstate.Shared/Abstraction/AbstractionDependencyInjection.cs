@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -25,14 +25,14 @@ public static class AbstractionDependencyInjection
                 .AddClasses(classes => classes.AssignableTo(typeof(IDomainEventHandler<>)), publicOnly: false)
                 .AsImplementedInterfaces()
                 .WithScopedLifetime()
-                
+
         );
-        services.AddTransient<IDomainEventDispatcher,DomainEventDispatcher>();
+        services.AddTransient<IDomainEventDispatcher, DomainEventDispatcher>();
 
         services.TryDecorate(typeof(ICommandHandler<>), typeof(ValidationDecorator.CommandHandler<>));
         services.TryDecorate(typeof(IQueryHandler<>), typeof(ValidationDecorator.QueryHandler<>));
 
         return services;
     }
-    
+
 }

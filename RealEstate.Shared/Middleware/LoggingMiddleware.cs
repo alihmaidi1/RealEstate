@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -31,18 +31,18 @@ public class LoggingMiddleware
 
             // Log response details
             var elapsedMs = GetElapsedMilliseconds(startTime, Stopwatch.GetTimestamp());
-            _logger.LogInformation("Request Completed: {StatusCode} in {Elapsed}ms",context.Response.StatusCode,elapsedMs);
+            _logger.LogInformation("Request Completed: {StatusCode} in {Elapsed}ms", context.Response.StatusCode, elapsedMs);
         }
         catch (Exception ex)
         {
             // Log exceptions
             var elapsedMs = GetElapsedMilliseconds(startTime, Stopwatch.GetTimestamp());
-            _logger.LogError(ex, "Request Failed: {Method} {Path} ({Elapsed}ms)",context.Request.Method,context.Request.Path,elapsedMs);
+            _logger.LogError(ex, "Request Failed: {Method} {Path} ({Elapsed}ms)", context.Request.Method, context.Request.Path, elapsedMs);
 
-            throw; 
+            throw;
         }
     }
-    
+
     private static double GetElapsedMilliseconds(long start, long stop)
     {
         return (stop - start) * 1000 / (double)Stopwatch.Frequency;

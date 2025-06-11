@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,22 +20,25 @@ public class UnitOfWork : IUnitOfWork
 
     public async Task CommitWithDomainEventAsync(CancellationToken cancellationToken)
     {
-        var outBoxMessages=_context
+        var outBoxMessages = _context
         .ChangeTracker
         .Entries<TEntity>()
-        .Select(x=>x.Entity)
-        .SelectMany(entity=>{
+        .Select(x => x.Entity)
+        .SelectMany(entity =>
+        {
 
-            var DomainEvents=entity.GetDomainEvents();
+            var DomainEvents = entity.GetDomainEvents();
             entity.ClearDomainEvents();
             return DomainEvents;
         })
-        .Select(domainevent=>new OutBoxMessage{
+        .Select(domainevent => new OutBoxMessage
+        {
 
 
-            Content=JsonConvert.SerializeObject(domainevent,new JsonSerializerSettings{
+            Content = JsonConvert.SerializeObject(domainevent, new JsonSerializerSettings
+            {
 
-                TypeNameHandling= TypeNameHandling.All
+                TypeNameHandling = TypeNameHandling.All
             })
 
 
@@ -46,7 +49,7 @@ public class UnitOfWork : IUnitOfWork
 
     }
 
-    public async Task CommitAsync(CancellationToken cancellationToken=default)
+    public async Task CommitAsync(CancellationToken cancellationToken = default)
     {
 
         await _context.SaveChangesAsync(cancellationToken);

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,12 +32,12 @@ public class DomainEventDispatcher(IServiceProvider serviceProvider) : IDomainEv
                 if (handler is null) continue;
 
                 var handlerWrapper = HandlerWrapper.Create(handler, domainEventType);
-                await handlerWrapper.Handle(domainEvent,cancellationToken);
+                await handlerWrapper.Handle(domainEvent, cancellationToken);
             }
 
         }
     }
-    
+
 
 
 
@@ -56,9 +56,9 @@ public class DomainEventDispatcher(IServiceProvider serviceProvider) : IDomainEv
 
             Type wrapperType = WrapperTypeDictionary.GetOrAdd(
                 domainEventType,
-                et =>typeof(HandlerWrapper<>).MakeGenericType(et));
+                et => typeof(HandlerWrapper<>).MakeGenericType(et));
 
-            
+
             return (HandlerWrapper)Activator.CreateInstance(wrapperType, handler)!;
         }
     }
@@ -71,8 +71,8 @@ public class DomainEventDispatcher(IServiceProvider serviceProvider) : IDomainEv
         public override async Task Handle(IDomainEvent domainEvent, CancellationToken cancellationToken)
         {
 
-            await _handler.Handle((T)domainEvent,cancellationToken);
+            await _handler.Handle((T)domainEvent, cancellationToken);
         }
     }
-    
+
 }

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,11 +13,11 @@ public static class DependencyInjection
     {
         app.UseSwaggerUI(options =>
         {
-            options.SwaggerEndpoint("/openapi/v1.json","");
+            options.SwaggerEndpoint("/openapi/v1.json", "");
 
         });
 
         return app;
     }
-    
+
 }

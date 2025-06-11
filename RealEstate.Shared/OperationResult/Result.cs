@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -58,8 +58,8 @@ public class Result<T>
         {
 
             IsSuccess = false,
-            Message=Message
-            
+            Message = Message
+
         };
     }
 

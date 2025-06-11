@@ -1,8 +1,9 @@
-using RealEstate.Application;
+﻿using RealEstate.Application;
 using RealEstate.Infrastructure;
 using RealEstate.Shared.Middleware;
 using RealEstate.Shared.Security;
 using RealEstate.Shared.Swagger;
+using RealEstate.Shared.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,16 +18,18 @@ builder.Services.AddApiVersioning();
 builder.Services.AddLimitRate();
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddApplicationLayer();
+builder.Services.AddSharedServices(builder.Configuration);
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
+// if (app.Environment.IsDevelopment())
+// {
     app.MapOpenApi();
 
     app.UseSwaggerConfiguration();
-    
-}
+
+// }
 
 app.UseMiddleware<LoggingMiddleware>();
 app.UseHttpsRedirection();

@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using RealEstate.Shared.Abstraction.Entities;
 
 namespace RealEstate.Infrastructure.Repositories.Base;

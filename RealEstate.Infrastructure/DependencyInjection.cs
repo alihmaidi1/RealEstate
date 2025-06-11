@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,17 +12,17 @@ public static class DependencyInjection
 {
 
 
-    public static IServiceCollection AddInfrastructure(this IServiceCollection services,IConfiguration configuration)
+    public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
-        
+
         services.AddDbContext<RealEstateDbContext>(option =>
         {
-            option.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));                
-            option.EnableSensitiveDataLogging();                                
-            
+            option.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
+            option.EnableSensitiveDataLogging();
+
         });
 
         return services;
     }
-    
+
 }

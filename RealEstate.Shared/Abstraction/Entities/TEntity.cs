@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,7 +11,7 @@ public class TEntity : IEntity
 
     public Guid Id { get; set; }
     private readonly List<IDomainEvent> _domainEvents = new();
-        public IReadOnlyList<IDomainEvent> GetDomainEvents()
+    public IReadOnlyList<IDomainEvent> GetDomainEvents()
     {
         return _domainEvents.ToList();
     }
@@ -26,5 +26,5 @@ public class TEntity : IEntity
         _domainEvents.Add(domainEvent);
     }
 
-    
+
 }

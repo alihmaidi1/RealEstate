@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -9,7 +9,7 @@ public interface IDomainEvent;
 public interface IDomainEventHandler<T> where T : IDomainEvent
 {
 
-    public Task Handle(T domainEvent,CancellationToken cancellationToken);
+    public Task Handle(T domainEvent, CancellationToken cancellationToken);
 
 }
 

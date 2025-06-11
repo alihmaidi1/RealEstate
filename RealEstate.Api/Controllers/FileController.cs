@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,11 +12,11 @@ namespace RealEstate.Api.Controllers;
 public class FileController
 {
     [HttpPost]
-    
+
     public async Task<JsonResult> UploadChunk([FromBody] UploadChunkRequest uploadChunkRequest, [FromServices] ICommandHandler<UploadChunkRequest> commandHandler, CancellationToken cancellationToken)
     {
         return await commandHandler.Handle(uploadChunkRequest, cancellationToken);
-        
+
     }
 
 

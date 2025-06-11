@@ -1,4 +1,4 @@
-
+﻿
 using Amazon.S3;
 using Amazon.S3.Model;
 using Microsoft.Extensions.Configuration;
@@ -13,8 +13,8 @@ public class AwsStorageService : IAwsStorageService
     private readonly AmazonS3Client _s3Client;
 
 
-public AwsStorageService(
-        IConfiguration config)
+    public AwsStorageService(
+            IConfiguration config)
     {
         _config = config;
         var region = _config["AWS:Region"];
@@ -35,13 +35,13 @@ public AwsStorageService(
             PartETags = partETags
         };
 
-        var response=await _s3Client.CompleteMultipartUploadAsync(completeRequest);
+        var response = await _s3Client.CompleteMultipartUploadAsync(completeRequest);
         return Result<string>.SetSuccess(response.Location);
     }
 
     public async Task<Result<string>> GenerateChunkUploadUrl(string uploadId, int partNumber, string fileName)
     {
-         var request = new GetPreSignedUrlRequest
+        var request = new GetPreSignedUrlRequest
         {
             BucketName = _config["AWS:BucketName"],
             Key = Guid.NewGuid().ToString(),
@@ -54,6 +54,12 @@ public AwsStorageService(
         return Result<string>.SetSuccess(_s3Client.GetPreSignedURL(request));
     }
 
+    private void Dd()
+    {
+        
+
+    }
+
     public async Task<Result<string>> GenerateImageUploadUrl(string fileName)
     {
         var request = new GetPreSignedUrlRequest
@@ -61,15 +67,15 @@ public AwsStorageService(
             BucketName = _config["AWS:BucketName"],
             Key = $"{_config["AWS:ImageContainer"]}/{Guid.NewGuid()}/{fileName}",
             Verb = HttpVerb.PUT,
-            Expires = DateTime.UtcNow.AddSeconds(Double.Parse(_config["AWS:PresignedUrlExpiration"]??"122"))
+            Expires = DateTime.UtcNow.AddSeconds(Double.Parse(_config["AWS:PresignedUrlExpiration"] ?? "122"))
         };
         return Result<string>.SetSuccess(_s3Client.GetPreSignedURL(request));
-        
+
     }
 
     public async Task<Result<ChunkedUploadResponse>> InitiateChunkedVideoUpload(string fileName)
     {
-         var initiateRequest = new InitiateMultipartUploadRequest
+        var initiateRequest = new InitiateMultipartUploadRequest
         {
             BucketName = _config["AWS:BucketName"],
             Key = $"{_config["AWS:VideoContainer"]}/{Guid.NewGuid()}/{fileName}"
@@ -83,6 +89,6 @@ public AwsStorageService(
         });
 
 
-        
+
     }
 }

@@ -1,4 +1,4 @@
-using System.Net;
+﻿using System.Net;
 using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
@@ -17,8 +17,8 @@ public static class ValidationDecorator
 
         async Task<JsonResult> ICommandHandler<TCommand>.Handle(TCommand request, CancellationToken cancellationToken)
         {
-            var validationFailures = await ValidateAsync(request,validators);
-            if (validationFailures==null)
+            var validationFailures = await ValidateAsync(request, validators);
+            if (validationFailures == null)
             {
                 return await innerHandler.Handle(request, cancellationToken);
             }
@@ -37,8 +37,8 @@ public static class ValidationDecorator
     {
         public async Task<JsonResult> Handle(TQuery request, CancellationToken cancellationToken)
         {
-            var validationFailures = await ValidateAsync(request,validators);
-            if (validationFailures==null)
+            var validationFailures = await ValidateAsync(request, validators);
+            if (validationFailures == null)
             {
                 return await innerHandler.Handle(request, cancellationToken);
             }
