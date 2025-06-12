@@ -3,6 +3,7 @@ using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using RealEstate.Shared.Abstraction;
+
 namespace RealEstate.Application;
 
 public static class DependencyInjection
@@ -11,8 +12,6 @@ public static class DependencyInjection
 
     public static IServiceCollection AddApplicationLayer(this IServiceCollection services)
     {
-
-
         services.AddAbstraction();
         services.Configure<ApiBehaviorOptions>(options =>
         {
@@ -21,6 +20,8 @@ public static class DependencyInjection
 
         });
         services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+
         return services;
     }
 }
+    
