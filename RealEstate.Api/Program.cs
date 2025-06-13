@@ -1,5 +1,6 @@
 ﻿using RealEstate.Application;
 using RealEstate.Infrastructure;
+using RealEstate.Shared;
 using RealEstate.Shared.Middleware;
 using RealEstate.Shared.Security;
 using RealEstate.Shared.Swagger;
@@ -19,6 +20,7 @@ builder.Services.AddLimitRate();
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddApplicationLayer();
 builder.Services.AddSharedServices(builder.Configuration);
+builder.Services.AddSharedLayer();
 
 var app = builder.Build();
 

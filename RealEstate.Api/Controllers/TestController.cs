@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
+using RealEstate.Shared.Filters;
+using RealEstate.Shared.Security.SecretManager;
 using RealEstate.Shared.Services.Sms;
 
 namespace RealEstate.Api.Controllers;
@@ -13,10 +15,18 @@ namespace RealEstate.Api.Controllers;
 public class TestController : ControllerBase
 {
     [HttpGet]
-    public async Task<IActionResult> GetWorkout([FromServices] ISmsTwilioService smsTwilioService)
+    public async Task<IActionResult> GetKey(string key,[FromServices] ISecretManagerService secretManagerService)
     {
-        await smsTwilioService.Send("+18777804236", "hello from ali Test");
-        return Ok("hello1");
+        return Ok(await secretManagerService.GetSecret(key));
+    }
+
+    
+    [ServiceFilter(typeof(ApiKeyAuthFilter))]
+    [HttpGet]
+    public async Task<IActionResult> RemoveKey(string key,[FromServices] ISecretManagerService secretManagerService)
+    {
+        await secretManagerService.InvalidateSecret(key);
+        return Ok("done!");
     }
 
 

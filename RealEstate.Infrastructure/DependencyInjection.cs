@@ -14,13 +14,16 @@ public static class DependencyInjection
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         
-                                   
+        
+
+
         services.AddDbContext<RealEstateDbContext>(option =>
         {
             option.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
             option.EnableSensitiveDataLogging();
 
         });
+        
 
         services.AddHangfire(config => config.UseSqlServerStorage(configuration.GetConnectionString("DefaultConnection"))
         .UseDashboardMetrics()

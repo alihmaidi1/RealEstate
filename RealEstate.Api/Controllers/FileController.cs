@@ -21,7 +21,3 @@ public class FileController
 
 
 }
-
-internal class OperationResultBase<T>
-{
-}
