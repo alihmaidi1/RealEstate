@@ -29,7 +29,7 @@ var app = builder.Build();
 // {
 app.MapOpenApi();
 app.UseSwaggerConfiguration();
-app.UseInfrastructure();
+await app.UseInfrastructure();
 
 // }
 

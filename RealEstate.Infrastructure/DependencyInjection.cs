@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using RealEstate.Infrastructure.Seed;
+using RealEstate.Infrastructure.Services.Archive;
 
 namespace RealEstate.Infrastructure;
 
@@ -13,9 +15,9 @@ public static class DependencyInjection
 
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
-        
-        
 
+
+        services.AddTransient<IArchiveService, ArchiveService>();
 
         services.AddDbContext<RealEstateDbContext>(option =>
         {
@@ -48,9 +50,13 @@ public static class DependencyInjection
     }
 
 
-    public static WebApplication UseInfrastructure(this WebApplication app)
+    public static async Task<WebApplication> UseInfrastructure(this WebApplication app)
     {
-            
+        
+        using(var scope= app.Services.CreateScope()){
+    
+            await DatabaseSeed.InitializeAsync(scope.ServiceProvider);
+        }
         app.UseHangfireDashboard("/jobs", new DashboardOptions {
             DashboardTitle = "Background Server",
             StatsPollingInterval = 5000,

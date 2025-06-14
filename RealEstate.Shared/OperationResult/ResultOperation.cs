@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,12 +14,16 @@ public static class ResultOperation
 
     public static JsonResult ToJsonResult<T>(this Result<T> operationResult, HttpStatusCode ResultStatusCode)
     {
-        // using var operationResultBase=CreateOperationResultBase<T>(result,message,statusCode);
-        return new JsonResult(operationResult)
+        var options = new JsonSerializerOptions
+        {
+            ReferenceHandler = ReferenceHandler.IgnoreCycles,
+            WriteIndented = false 
+        };
+        return new JsonResult(operationResult.Data,options)
         {
 
             StatusCode = (int)ResultStatusCode,
-
+                        
 
         };
 

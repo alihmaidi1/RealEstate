@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
+﻿using System.Reflection;
 using Microsoft.EntityFrameworkCore;
+
+using RealEstate.Infrastructure.Services.Archive;
 using RealEstate.Shared.Abstraction.Entities;
 
 namespace RealEstate.Infrastructure;
@@ -25,6 +23,9 @@ public class RealEstateDbContext : DbContext
     }
 
     public DbSet<OutBoxMessage> OutBoxMessages { get; init; }
+    
+    public DbSet<ArchiveRecord>  ArchiveRecords { get; init; }
 
+    
 
 }
