@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using Newtonsoft.Json;
 using RealEstate.Shared.Abstraction.Entities;
+using RealEstate.Shared.Abstraction.Entities.Entity;
 
-namespace RealEstate.Infrastructure.Repositories.Base;
+namespace RealEstate.Infrastructure.Repositories.Base.UnitOfWork;
 
 public class UnitOfWork : IUnitOfWork
 {
@@ -18,7 +21,7 @@ public class UnitOfWork : IUnitOfWork
         _context = context;
     }
 
-    public async Task CommitWithDomainEventAsync(CancellationToken cancellationToken)
+    public async Task SaveChangesWithDomainEventAsync(CancellationToken cancellationToken)
     {
         var outBoxMessages = _context
         .ChangeTracker
@@ -49,7 +52,14 @@ public class UnitOfWork : IUnitOfWork
 
     }
 
-    public async Task CommitAsync(CancellationToken cancellationToken = default)
+    public async Task<IDbTransaction> BeginTransactionAsync(CancellationToken cancellationToken)
+    {
+        var transaction = _context.Database.BeginTransaction();
+
+        return transaction.GetDbTransaction();
+    }
+
+    public async Task SaveChangesAsync(CancellationToken cancellationToken = default)
     {
 
         await _context.SaveChangesAsync(cancellationToken);

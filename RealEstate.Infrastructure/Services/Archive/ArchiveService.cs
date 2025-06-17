@@ -5,6 +5,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 using RealEstate.Shared.Abstraction.Entities;
+using RealEstate.Shared.Abstraction.Entities.Entity;
 using RealEstate.Shared.OperationResult;
 
 namespace RealEstate.Infrastructure.Services.Archive;
@@ -25,7 +26,7 @@ public class ArchiveService: IArchiveService
         _context = context;
     }
 
-    public async Task<Result<bool>> ArchiveEntityAsync<TEntity>(Guid Id, params Func<IQueryable<TEntity>, IQueryable<TEntity>>[] includes)
+    public async Task<TResult<bool>> ArchiveEntityAsync<TEntity>(Guid Id, params Func<IQueryable<TEntity>, IQueryable<TEntity>>[] includes)
         where TEntity : class, IEntity
     {
         
@@ -43,7 +44,7 @@ public class ArchiveService: IArchiveService
             .FirstOrDefaultAsync(e => e.Id ==Id);
         
         if (entityWithRelations == null)
-            return Result<bool>.SetError("Entity not found");
+            return Result.Failure<bool>(Error.NotFound("Entity not found"));
 
         var jsonData = JsonSerializer.Serialize(entityWithRelations, jsonoptions);
         var archiveRecord = new ArchiveRecord
@@ -55,10 +56,10 @@ public class ArchiveService: IArchiveService
         };
         _context.ArchiveRecords.Add(archiveRecord);
         _context.Set<TEntity>().Remove(entityWithRelations);
-        return Result<bool>.SetSuccess();
+        return Result.Success<bool>(true);
     }
 
-    public async Task<Result<TEntity>> RestoreEntityAsync<TEntity>(Guid id) where TEntity : class, IEntity
+    public async Task<TResult<TEntity>> RestoreEntityAsync<TEntity>(Guid id) where TEntity : class, IEntity
     {
 
         var archiveRecord = await _context.ArchiveRecords
@@ -66,20 +67,20 @@ public class ArchiveService: IArchiveService
             .FirstOrDefaultAsync(a => a.EntityId == id && a.EntityName == typeof(TEntity).Name);
         
         if (archiveRecord == null)
-            return Result<TEntity>.SetError("Archived record not found");
+            return Result.Failure<TEntity>(Error.NotFound("Archived record not found"));
 
 
         var entity = JsonSerializer.Deserialize<TEntity>(archiveRecord.JsonData, jsonoptions);
         if (entity == null)
-            return Result<TEntity>.SetError($"{typeof(TEntity).Name} Deserialization failed");
+            return Result.Failure<TEntity>(Error.Internal($"{typeof(TEntity).Name} Deserialization failed"));
         _context.Set<TEntity>().Add(entity);
         _context.ArchiveRecords.Remove(archiveRecord);
-        return Result<TEntity>.SetSuccess(entity);
+        return Result.Success(entity);
     }
 
 
 
-    public async Task<Result<bool>> DeleteArchiveAsync<TEntity>(Guid id)
+    public async Task<TResult<bool>> DeleteArchiveAsync<TEntity>(Guid id)
         where TEntity : class, IEntity
     {
         var archiveRecord = await _context.ArchiveRecords
@@ -87,15 +88,15 @@ public class ArchiveService: IArchiveService
             .FirstOrDefaultAsync(a => a.EntityId == id && a.EntityName == typeof(TEntity).Name);
 
         if (archiveRecord == null)
-            return Result<bool>.SetError("Archived record not found");
+            return Result.Failure<bool>(Error.NotFound("Archived record not found"));
 
         _context.ArchiveRecords.Remove(archiveRecord);
 
-        return Result<bool>.SetSuccess();
+        return Result.Success<bool>(true);
 
     }
 
-    public async Task<Result<List<TEntity>>> GetArchivesAsync<TEntity>()
+    public async Task<TResult<List<TEntity>>> GetArchivesAsync<TEntity>()
         where TEntity : class, IEntity
     {
         var entityName = typeof(TEntity).Name;
@@ -106,7 +107,7 @@ public class ArchiveService: IArchiveService
             .Select(x=>JsonSerializer.Deserialize<TEntity>(x.JsonData, jsonoptions)!)
             .ToList();
 
-        return Result<List<TEntity>>.SetSuccess(entities);
+        return Result.Success(entities);
     }
 
 }

@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using RealEstate.Shared.Abstraction.CQRS;
+﻿using RealEstate.Shared.Abstraction.CQRS;
 
-namespace RealEstate.Shared.Abstraction.Entities;
+namespace RealEstate.Shared.Abstraction.Entities.Entity;
 
 public class TEntity : IEntity
 {

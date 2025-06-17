@@ -10,20 +10,22 @@ namespace RealEstate.Shared.Abstraction.Behavior;
 public static class ValidationDecorator
 {
 
-    public sealed class CommandHandler<TCommand>(ICommandHandler<TCommand> innerHandler,
+    public  class CommandHandler<TCommand>(ICommandHandler<TCommand> innerHandler,
     IEnumerable<IValidator<TCommand>> validators) : ICommandHandler<TCommand>
     where TCommand : ICommand
     {
 
-        async Task<JsonResult> ICommandHandler<TCommand>.Handle(TCommand request, CancellationToken cancellationToken)
+
+        public virtual async  Task<JsonResult> Handle(TCommand request, CancellationToken cancellationToken)
         {
+            Console.WriteLine("YYYYYYYYYYYYYY");
             var validationFailures = await ValidateAsync(request, validators);
             if (validationFailures == null)
             {
                 return await innerHandler.Handle(request, cancellationToken);
             }
 
-            return Result<Object>.SetError(validationFailures).ToJsonResult(HttpStatusCode.UnprocessableContent);
+            return Result.Failure<Object>(Error.ValidationFailures(validationFailures)).ToJsonResult(HttpStatusCode.UnprocessableContent);
 
         }
 
@@ -42,8 +44,7 @@ public static class ValidationDecorator
             {
                 return await innerHandler.Handle(request, cancellationToken);
             }
-
-            return Result<Object>.SetError(validationFailures).ToJsonResult(HttpStatusCode.UnprocessableContent);
+            return Result.Failure<Object>(Error.ValidationFailures(validationFailures)).ToJsonResult(HttpStatusCode.UnprocessableContent);
 
         }
     }

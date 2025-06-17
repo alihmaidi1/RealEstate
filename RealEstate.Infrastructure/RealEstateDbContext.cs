@@ -8,7 +8,7 @@ namespace RealEstate.Infrastructure;
 
 public class RealEstateDbContext : DbContext
 {
-    public RealEstateDbContext(DbContextOptions option) : base(option)
+    public RealEstateDbContext(DbContextOptions<RealEstateDbContext> option) : base(option)
     {
 
 

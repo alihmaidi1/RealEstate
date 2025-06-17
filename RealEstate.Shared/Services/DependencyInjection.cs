@@ -15,7 +15,10 @@ public static class DependencyInjection
     
     public static IServiceCollection AddSharedServices(this IServiceCollection services,IConfiguration configuration)
     {
-        services.Configure<TwilioSmsSetting>(configuration.GetSection("Twilio"));
+        services.AddOptions<TwilioSmsSetting>()
+            .BindConfiguration("Twilio")
+            .ValidateDataAnnotations()
+            .ValidateOnStart();
         services.AddTransient<ISecretManagerService, SecretManagerService>();
         services.AddMemoryCache();
         services.AddTransient<ISmsTwilioService,SmsTwilioService>();

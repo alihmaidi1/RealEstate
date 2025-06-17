@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿
 using Microsoft.Extensions.Caching.Memory;
-using RealEstate.Infrastructure.Repositories.Base;
+using RealEstate.Infrastructure.Repositories.Base.Repository;
 using RealEstate.Shared.Abstraction.Entities;
+using RealEstate.Shared.Abstraction.Entities.Entity;
 
 namespace RealEstate.Infrastructure.Repositories.Cache;
 

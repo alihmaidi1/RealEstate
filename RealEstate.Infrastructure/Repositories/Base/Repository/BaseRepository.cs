@@ -1,7 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RealEstate.Shared.Abstraction.Entities;
+using RealEstate.Shared.Abstraction.Entities.Entity;
 
-namespace RealEstate.Infrastructure.Repositories.Base;
+namespace RealEstate.Infrastructure.Repositories.Base.Repository;
 
 public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : class, IEntity
 {

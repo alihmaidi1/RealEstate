@@ -7,4 +7,4 @@ namespace RealEstate.Shared.Abstraction.CQRS;
 
 public interface ICommand;
 
-public interface ICommand<TResponse> where TResponse : OperationResult.Result<TResponse>;
+public interface ICommand<TResponse> where TResponse : OperationResult.TResult<TResponse>;

@@ -1,6 +1,7 @@
 ﻿using RealEstate.Application;
 using RealEstate.Infrastructure;
 using RealEstate.Shared;
+using RealEstate.Shared.Abstraction.CQRS;
 using RealEstate.Shared.Middleware;
 using RealEstate.Shared.Security;
 using RealEstate.Shared.Swagger;
@@ -14,6 +15,21 @@ builder.Services.AddOpenApi();
 
 
 builder.Services.AddControllers();
+
+builder.Services.Scan(scan =>
+    scan.FromAssemblies(AppDomain.CurrentDomain.GetAssemblies())
+        .AddClasses(classes => classes.AssignableTo(typeof(ICommandHandler<>)), publicOnly: false)
+        .AsImplementedInterfaces()
+        .WithScopedLifetime()
+        .AddClasses(classes => classes.AssignableTo(typeof(IQueryHandler<>)), publicOnly: false)
+        .AsImplementedInterfaces()
+        .WithScopedLifetime()
+        .AddClasses(classes => classes.AssignableTo(typeof(IDomainEventHandler<>)), publicOnly: false)
+        .AsImplementedInterfaces()
+        .WithScopedLifetime()
+
+);
+
 
 builder.Services.AddApiVersioning();
 builder.Services.AddLimitRate();
@@ -32,6 +48,7 @@ app.UseSwaggerConfiguration();
 await app.UseInfrastructure();
 
 // }
+app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
 
 app.UseMiddleware<LoggingMiddleware>();
 app.UseHttpsRedirection();

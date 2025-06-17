@@ -25,7 +25,7 @@ public class AwsStorageService : IAwsStorageService
             );
     }
 
-    public async Task<Result<string>> CompleteChunkedUpload(string uploadId, string fileName, List<Amazon.S3.Model.PartETag> partETags)
+    public async Task<TResult<string>> CompleteChunkedUpload(string uploadId, string fileName, List<Amazon.S3.Model.PartETag> partETags)
     {
         var completeRequest = new CompleteMultipartUploadRequest
         {
@@ -36,10 +36,10 @@ public class AwsStorageService : IAwsStorageService
         };
 
         var response = await _s3Client.CompleteMultipartUploadAsync(completeRequest);
-        return Result<string>.SetSuccess(response.Location);
+        return Result.Success(response.Location);
     }
 
-    public async Task<Result<string>> GenerateChunkUploadUrl(string uploadId, int partNumber, string fileName)
+    public async Task<TResult<string>> GenerateChunkUploadUrl(string uploadId, int partNumber, string fileName)
     {
         var request = new GetPreSignedUrlRequest
         {
@@ -51,16 +51,10 @@ public class AwsStorageService : IAwsStorageService
             UploadId = uploadId
         };
 
-        return Result<string>.SetSuccess(_s3Client.GetPreSignedURL(request));
+        return Result.Success(_s3Client.GetPreSignedURL(request));
     }
 
-    private void Dd()
-    {
-        
-
-    }
-
-    public async Task<Result<string>> GenerateImageUploadUrl(string fileName)
+    public async Task<TResult<string>> GenerateImageUploadUrl(string fileName)
     {
         var request = new GetPreSignedUrlRequest
         {
@@ -69,11 +63,11 @@ public class AwsStorageService : IAwsStorageService
             Verb = HttpVerb.PUT,
             Expires = DateTime.UtcNow.AddSeconds(Double.Parse(_config["AWS:PresignedUrlExpiration"] ?? "122"))
         };
-        return Result<string>.SetSuccess(_s3Client.GetPreSignedURL(request));
+        return Result.Success(_s3Client.GetPreSignedURL(request));
 
     }
 
-    public async Task<Result<ChunkedUploadResponse>> InitiateChunkedVideoUpload(string fileName)
+    public async Task<TResult<ChunkedUploadResponse>> InitiateChunkedVideoUpload(string fileName)
     {
         var initiateRequest = new InitiateMultipartUploadRequest
         {
@@ -82,7 +76,7 @@ public class AwsStorageService : IAwsStorageService
         };
 
         var response = await _s3Client.InitiateMultipartUploadAsync(initiateRequest);
-        return Result<ChunkedUploadResponse>.SetSuccess(new ChunkedUploadResponse
+        return Result.Success(new ChunkedUploadResponse
         {
             UploadId = response.UploadId,
             Key = response.Key
