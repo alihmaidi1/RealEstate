@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using RealEstate.Shared.Filters;
 using RealEstate.Shared.OperationResult;
 using RealEstate.Shared.Security.SecretManager;
+using RealEstate.Shared.Services.Paypal.Base;
+using RealEstate.Shared.Services.Paypal.Checkout;
 using RealEstate.Shared.Services.Sms;
 
 namespace RealEstate.Api.Controllers;
@@ -27,8 +29,27 @@ public class TestController : ControllerBase
     }
 
 
+    [HttpGet]
+    public async Task<IActionResult> GetPaypalToken([FromServices] IPaypalAuthService paypalService)
+    {
+        var token=await paypalService.GetAccessTokenAsync();
+        return Ok(token);
+    }
 
 
 
+    [HttpGet]
+    public async Task<IActionResult> CreatePaypalOrder([FromServices] IPaypalCheckoutService paypalService)
+    {
+        var paymenturl=await paypalService.CreateOrderAsync(100);
+        return Ok(paymenturl);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> CaptureAuthorization([FromBody]string id,[FromServices] IPaypalCheckoutService paypalService)
+    {
+        var paymenturl=await paypalService.CaptureAuthorizationAsync(id,20);
+        return Ok(paymenturl);
+    }
 
 }

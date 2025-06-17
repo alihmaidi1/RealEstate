@@ -10,8 +10,14 @@
     <PackageReference Include="AWSSDK.S3" />
     <PackageReference Include="AWSSDK.SecretsManager" />
     <PackageReference Include="FluentValidation.AspNetCore" />
+    <PackageReference Include="Microsoft.Extensions.Http.Polly" />
+    <PackageReference Include="Polly" />
+    <PackageReference Include="Refit.HttpClientFactory" />
     <PackageReference Include="Scrutor" />
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" />
     <PackageReference Include="Twilio"/>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Services\Paypal\Subscription\" />
   </ItemGroup>
 </Project>
