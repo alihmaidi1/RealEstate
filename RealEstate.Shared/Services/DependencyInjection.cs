@@ -1,3 +1,5 @@
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Polly;
@@ -6,6 +8,7 @@ using RealEstate.Shared.Services.Paypal.Base;
 using RealEstate.Shared.Services.Paypal.Checkout;
 using RealEstate.Shared.Services.Paypal.Dto;
 using RealEstate.Shared.Services.Paypal.HttpClientCall;
+using RealEstate.Shared.Services.Paypal.Webhook;
 using RealEstate.Shared.Services.Sms;
 using Refit;
 
@@ -27,6 +30,18 @@ public static class DependencyInjection
             .ConfigureHttpClient(c => c.BaseAddress = new Uri("https://api.sandbox.paypal.com"))
             .AddPolicyHandler(Policy.TimeoutAsync<HttpResponseMessage>(TimeSpan.FromSeconds(100)));
 
+        services.AddRefitClient<IPayPalWebhookApi>(provider => 
+                    new RefitSettings
+                    {
+                        ContentSerializer = new SystemTextJsonContentSerializer(
+                            new JsonSerializerOptions
+                            {
+                                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+                            })
+                    })
+            .ConfigureHttpClient(c => c.BaseAddress = new Uri("https://api.sandbox.paypal.com"))
+            .AddPolicyHandler(Policy.TimeoutAsync<HttpResponseMessage>(TimeSpan.FromSeconds(100)));
         
         services.AddOptions<TwilioSmsSetting>()
             .BindConfiguration("Twilio")

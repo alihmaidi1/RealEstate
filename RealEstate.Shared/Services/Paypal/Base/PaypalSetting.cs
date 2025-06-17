@@ -14,6 +14,7 @@ public class PaypalSetting
     
     [Required]
     public string Environment { get; set; }
+    
 
     
     [Required,Url]
@@ -23,5 +24,8 @@ public class PaypalSetting
     [Required,Url]
     public string CancelUrl { get; set; }
     
+    
+    [Required]
+    public string WebhookId { get; set; }
     
 }

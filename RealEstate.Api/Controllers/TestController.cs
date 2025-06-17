@@ -51,5 +51,26 @@ public class TestController : ControllerBase
         var paymenturl=await paypalService.CaptureAuthorizationAsync(id,20);
         return Ok(paymenturl);
     }
+    
+    
+
+    [HttpPost]
+    public async Task<IActionResult> WebHook()
+    {
+        
+        using var reader = new StreamReader(Request.Body);
+        var json = await reader.ReadToEndAsync();
+        var headers = Request.Headers;
+
+        
+        // if (!_webhookService.VerifyWebhookSignature(json, headers))
+        // {
+        //     _logger.LogWarning("Invalid webhook signature");
+        //     return BadRequest("Invalid signature");
+        // }
+
+        return null;
+    }
+
 
 }
