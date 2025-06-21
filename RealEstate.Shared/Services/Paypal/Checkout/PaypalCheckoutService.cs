@@ -14,7 +14,6 @@ public class PaypalCheckoutService: IPaypalCheckoutService
 {
     
     private readonly PaypalSetting _config;
-    private readonly AsyncRetryPolicy _retryPolicy;
     private IPaypalAuthService  _paypalAuthService;
     private IPayPalOrdersApi _payPalOrdersApi;
     public PaypalCheckoutService(IOptions<PaypalSetting> config,IPayPalOrdersApi payPalOrdersApi,IPaypalAuthService  paypalAuthService)
@@ -22,11 +21,7 @@ public class PaypalCheckoutService: IPaypalCheckoutService
         _payPalOrdersApi= payPalOrdersApi;
         _paypalAuthService = paypalAuthService;
         _config = config.Value;
-        _retryPolicy = Policy
-            .Handle<ApiException>(ex => ex.StatusCode == System.Net.HttpStatusCode.TooManyRequests)
-            .WaitAndRetryAsync(3, retryAttempt => 
-                TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)));
-
+        
 
     }
 
@@ -54,8 +49,7 @@ public class PaypalCheckoutService: IPaypalCheckoutService
                 cancel_url = _config.CancelUrl
             }
         };
-        var response = await _retryPolicy.ExecuteAsync(async () => 
-            await _payPalOrdersApi.CreateOrderAsync($"Bearer {token}", "application/json", request));
+        var response = await _payPalOrdersApi.CreateOrderAsync($"Bearer {token}", "application/json", request);
         
         var approvalLink = response.links.FirstOrDefault(l => l.rel == "approve")?.href;
         if (string.IsNullOrEmpty(approvalLink))
@@ -79,19 +73,17 @@ public class PaypalCheckoutService: IPaypalCheckoutService
         };
         
         
-        var response = await _retryPolicy.ExecuteAsync(async () => 
-            await _payPalOrdersApi.CaptureAuthorizationAsync(
-                $"Bearer {token}", authorizationId, request));
+        return await _payPalOrdersApi.CaptureAuthorizationAsync(
+                $"Bearer {token}", authorizationId, request);
 
-        return response;
     }
     
     public async Task VoidAuthorizationAsync(string authorizationId)
     {   
         var token = await _paypalAuthService.GetAccessTokenAsync();
         
-        await _retryPolicy.ExecuteAsync(async () => await _payPalOrdersApi.VoidAuthorizationAsync(
-            $"Bearer {token}", authorizationId));
+        await _payPalOrdersApi.VoidAuthorizationAsync(
+            $"Bearer {token}", authorizationId);
         
         
     }

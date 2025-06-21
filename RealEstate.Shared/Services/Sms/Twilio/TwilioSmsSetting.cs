@@ -1,10 +1,6 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace RealEstate.Shared.Services.Sms;
+namespace RealEstate.Shared.Services.Sms.Twilio;
 
 public class TwilioSmsSetting
 {

@@ -3,7 +3,7 @@ using Twilio;
 using Twilio.Rest.Api.V2010.Account;
 using Twilio.Types;
 
-namespace RealEstate.Shared.Services.Sms;
+namespace RealEstate.Shared.Services.Sms.Twilio;
 
 public class SmsTwilioService : ISmsTwilioService
 {

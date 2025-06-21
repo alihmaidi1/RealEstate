@@ -3,13 +3,16 @@ using System.Text.Json.Serialization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Polly;
+using RealEstate.Shared.Helper;
 using RealEstate.Shared.Security.SecretManager;
 using RealEstate.Shared.Services.Paypal.Base;
 using RealEstate.Shared.Services.Paypal.Checkout;
 using RealEstate.Shared.Services.Paypal.Dto;
 using RealEstate.Shared.Services.Paypal.HttpClientCall;
+using RealEstate.Shared.Services.Paypal.Subscription;
 using RealEstate.Shared.Services.Paypal.Webhook;
 using RealEstate.Shared.Services.Sms;
+using RealEstate.Shared.Services.Sms.Twilio;
 using Refit;
 
 namespace RealEstate.Shared.Services;
@@ -24,12 +27,22 @@ public static class DependencyInjection
         
         services.AddRefitClient<IPayPalAuthApi>()
             .ConfigureHttpClient(c => c.BaseAddress = new Uri("https://api.sandbox.paypal.com"))
-            .AddPolicyHandler(Policy.TimeoutAsync<HttpResponseMessage>(TimeSpan.FromSeconds(100)));
+            .AddPolicyHandler(PollyHelper.GetTimeOutPolicy(100))
+            .AddPolicyHandler(c=>PollyHelper.GetRetryPolicy());
         
         services.AddRefitClient<IPayPalOrdersApi>()
             .ConfigureHttpClient(c => c.BaseAddress = new Uri("https://api.sandbox.paypal.com"))
-            .AddPolicyHandler(Policy.TimeoutAsync<HttpResponseMessage>(TimeSpan.FromSeconds(100)));
+            .AddPolicyHandler(PollyHelper.GetTimeOutPolicy(100))
+            .AddPolicyHandler(c=>PollyHelper.GetRetryPolicy());
+            
 
+        services.AddRefitClient<IPaypalSubscriptionApi>()
+            .ConfigureHttpClient(c => c.BaseAddress = new Uri(" https://api.sandbox.paypal.com"))
+            .AddPolicyHandler(PollyHelper.GetTimeOutPolicy(100))
+            .AddPolicyHandler(c=>PollyHelper.GetRetryPolicy());
+            
+
+        
         services.AddRefitClient<IPayPalWebhookApi>(provider => 
                     new RefitSettings
                     {
@@ -41,7 +54,9 @@ public static class DependencyInjection
                             })
                     })
             .ConfigureHttpClient(c => c.BaseAddress = new Uri("https://api.sandbox.paypal.com"))
-            .AddPolicyHandler(Policy.TimeoutAsync<HttpResponseMessage>(TimeSpan.FromSeconds(100)));
+            .AddPolicyHandler(PollyHelper.GetTimeOutPolicy(100))
+            .AddPolicyHandler(c=>PollyHelper.GetRetryPolicy());
+
         
         services.AddOptions<TwilioSmsSetting>()
             .BindConfiguration("Twilio")
@@ -56,7 +71,7 @@ public static class DependencyInjection
         services.AddTransient<ISmsTwilioService,SmsTwilioService>();
         services.AddTransient<IPaypalCheckoutService, PaypalCheckoutService>();
         services.AddTransient<IPaypalAuthService, PaypalAuthService>();
-
+        services.AddTransient<IPaypalSubscriptionService, PaypalSubscriptionService>();
         return services;
     }
     
