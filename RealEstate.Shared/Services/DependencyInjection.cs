@@ -13,6 +13,7 @@ using RealEstate.Shared.Services.Paypal.Subscription;
 using RealEstate.Shared.Services.Paypal.Webhook;
 using RealEstate.Shared.Services.Sms;
 using RealEstate.Shared.Services.Sms.Twilio;
+using RealEstate.Shared.Services.Sms.Whatsapp;
 using Refit;
 
 namespace RealEstate.Shared.Services;
@@ -37,10 +38,15 @@ public static class DependencyInjection
             
 
         services.AddRefitClient<IPaypalSubscriptionApi>()
-            .ConfigureHttpClient(c => c.BaseAddress = new Uri(" https://api.sandbox.paypal.com"))
+            .ConfigureHttpClient(c => c.BaseAddress = new Uri("https://api.sandbox.paypal.com"))
             .AddPolicyHandler(PollyHelper.GetTimeOutPolicy(100))
             .AddPolicyHandler(c=>PollyHelper.GetRetryPolicy());
             
+
+        services.AddRefitClient<IWhatsAppCloudApi>()
+            .ConfigureHttpClient(c => c.BaseAddress = new Uri("https://graph.facebook.com/v19.0/"))
+            .AddPolicyHandler(PollyHelper.GetTimeOutPolicy(100))
+            .AddPolicyHandler(c=>PollyHelper.GetRetryPolicy());
 
         
         services.AddRefitClient<IPayPalWebhookApi>(provider => 
@@ -62,6 +68,11 @@ public static class DependencyInjection
             .BindConfiguration("Twilio")
             .ValidateDataAnnotations()
             .ValidateOnStart();
+        
+        services.AddOptions<WhatsappMessageSetting>()
+            .BindConfiguration("Whatsapp")
+            .ValidateDataAnnotations()
+            .ValidateOnStart();
         services.AddOptions<PaypalSetting>()
             .BindConfiguration("PayPal")
             .ValidateDataAnnotations()
@@ -72,6 +83,7 @@ public static class DependencyInjection
         services.AddTransient<IPaypalCheckoutService, PaypalCheckoutService>();
         services.AddTransient<IPaypalAuthService, PaypalAuthService>();
         services.AddTransient<IPaypalSubscriptionService, PaypalSubscriptionService>();
+        services.AddTransient<IWhatsAppService, WhatsAppService>();
         return services;
     }
     
