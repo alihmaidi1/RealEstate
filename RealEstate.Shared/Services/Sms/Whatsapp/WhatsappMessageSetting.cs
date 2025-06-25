@@ -9,8 +9,8 @@ public class WhatsappMessageSetting
     
     
     [Required]
-    public string token { get; set; }
+    public string AccessToken { get; set; }
     
     [Required]
-    public string phone { get; set; }
+    public string PhoneNumberId { get; set; }
 }

@@ -24,9 +24,9 @@ public class WhatsAppService: IWhatsAppService
         };
 
         return await _iWhatsAppCloudApi.SendMessage(
-            _whatsappMessageSetting.phone,
+            _whatsappMessageSetting.PhoneNumberId,
             request,
-            $"Bearer {_whatsappMessageSetting.token}"
+            $"Bearer {_whatsappMessageSetting.AccessToken}"
         );
     }
 }

@@ -1,9 +1,11 @@
 ﻿using Hangfire;
 using Hangfire.SqlServer;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using RealEstate.Domain.Security;
 using RealEstate.Infrastructure.BackgroundServer;
 using RealEstate.Infrastructure.BackgroundServer.Filter;
 using RealEstate.Infrastructure.Repositories.Base.UnitOfWork;
@@ -22,7 +24,16 @@ public static class DependencyInjection
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
 
-
+        services.AddIdentity<User,Role>(option =>
+        {
+            option.SignIn.RequireConfirmedAccount = true;
+            
+            
+        }).AddEntityFrameworkStores<RealEstateDbContext>()
+            .AddApiEndpoints();
+        
+        
+        
         services.AddTransient<IArchiveService, ArchiveService>();
 
         services.AddDbContext<RealEstateDbContext>(option =>
@@ -90,6 +101,7 @@ public static class DependencyInjection
     
             await DatabaseSeed.InitializeAsync(scope.ServiceProvider);
         }
+
         
         app.UseHangfireDashboard("/jobs", new DashboardOptions {
             DashboardTitle = "Background Server",

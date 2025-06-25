@@ -1,10 +1,12 @@
 // Licensed to the .NET Foundation under one or more agreements.
 
+using System.Net;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Configuration;
 using RealEstate.Shared.Constant;
+using RealEstate.Shared.OperationResult;
 
 namespace RealEstate.Shared.Filters;
 
@@ -24,7 +26,7 @@ public class ApiKeyAuthFilter: IAuthorizationFilter
         if (!context.HttpContext.Request.Headers.TryGetValue(AuthConstants.ApiKeyHeaderName, out var apiKey))
         {
          
-            context.Result=new UnauthorizedObjectResult("Missing API Key");
+            context.Result=Result.Failure(Error.MissingApiKey).ToJsonResult(HttpStatusCode.Forbidden);
             return; 
             
         }
@@ -32,7 +34,7 @@ public class ApiKeyAuthFilter: IAuthorizationFilter
         var ExistsApiKey = _configuration.GetValue<string>(AuthConstants.ApiKeySectionName);
         if (!ExistsApiKey.Equals(apiKey))
         {
-            context.Result=new UnauthorizedObjectResult("Invalid Api Key");
+            context.Result=Result.Failure(Error.InvalidApiKey).ToJsonResult(HttpStatusCode.Forbidden);
             
         }
 

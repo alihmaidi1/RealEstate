@@ -12,7 +12,7 @@ namespace RealEstate.Shared.OperationResult;
 public static class ResultOperation
 {
 
-    public static JsonResult ToJsonResult<T>(this TResult<T> operationTResult, HttpStatusCode ResultStatusCode)
+    public static JsonResult ToJsonResult(this Result operationTResult, HttpStatusCode ResultStatusCode)
     {
         var options = new JsonSerializerOptions
         {
@@ -30,8 +30,7 @@ public static class ResultOperation
     }
 
 
-    public static async Task<JsonResult> ToJsonResultAsync<T>(this Task<TResult<T>> operationResult, HttpStatusCode StatusCode) where T : class
-    {
+    public static async Task<JsonResult> ToJsonResultAsync(this Task<Result> operationResult, HttpStatusCode StatusCode)     {
 
         return (await operationResult).ToJsonResult(StatusCode);
     }

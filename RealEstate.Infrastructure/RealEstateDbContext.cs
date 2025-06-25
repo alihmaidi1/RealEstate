@@ -1,12 +1,14 @@
 ﻿using System.Reflection;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-
+using RealEstate.Domain.Security;
 using RealEstate.Infrastructure.Services.Archive;
 using RealEstate.Shared.Abstraction.Entities;
 
 namespace RealEstate.Infrastructure;
 
-public class RealEstateDbContext : DbContext
+public class RealEstateDbContext : IdentityDbContext<User,Role,Guid>
 {
     public RealEstateDbContext(DbContextOptions<RealEstateDbContext> option) : base(option)
     {
@@ -19,6 +21,7 @@ public class RealEstateDbContext : DbContext
     {
 
         builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+        base.OnModelCreating(builder);
 
     }
 
