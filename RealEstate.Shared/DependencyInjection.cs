@@ -14,6 +14,8 @@ public static class DependencyInjection
     {
         services.AddScoped<ApiKeyAuthFilter>();
         services.AddTransient<GlobalExceptionHandlingMiddleware>();
+        services.AddTransient<RequestIdmiddleware>();
+
         return services;
     }
     

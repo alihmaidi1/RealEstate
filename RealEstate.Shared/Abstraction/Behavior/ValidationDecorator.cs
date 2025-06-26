@@ -12,11 +12,11 @@ public static class ValidationDecorator
 
     public  class CommandHandler<TCommand>(ICommandHandler<TCommand> innerHandler,
     IEnumerable<IValidator<TCommand>> validators) : ICommandHandler<TCommand>
-    where TCommand : ICommand
+    where TCommand : ICommand 
     {
 
 
-        public virtual async  Task<JsonResult> Handle(TCommand request, CancellationToken cancellationToken)
+        public async Task<IActionResult> Handle(TCommand request, CancellationToken cancellationToken)
         {
             Console.WriteLine("YYYYYYYYYYYYYY");
             var validationFailures = await ValidateAsync(request, validators);
@@ -24,27 +24,24 @@ public static class ValidationDecorator
             {
                 return await innerHandler.Handle(request, cancellationToken);
             }
-
-            return Result.Failure<Object>(Error.ValidationFailures(validationFailures)).ToJsonResult(HttpStatusCode.UnprocessableContent);
+            return Result.ValidationFailure(Error.ValidationFailures(validationFailures)).ToJsonResult();
 
         }
-
-
     }
 
 
     public sealed class QueryHandler<TQuery>(IQueryHandler<TQuery> innerHandler,
     IEnumerable<IValidator<TQuery>> validators) : IQueryHandler<TQuery>
-    where TQuery : IQuery
+    where TQuery : IQuery 
     {
-        public async Task<JsonResult> Handle(TQuery request, CancellationToken cancellationToken)
+        public async Task<IActionResult> Handle(TQuery request, CancellationToken cancellationToken)
         {
             var validationFailures = await ValidateAsync(request, validators);
             if (validationFailures == null)
             {
                 return await innerHandler.Handle(request, cancellationToken);
             }
-            return Result.Failure<Object>(Error.ValidationFailures(validationFailures)).ToJsonResult(HttpStatusCode.UnprocessableContent);
+            return  Result.ValidationFailure(Error.ValidationFailures(validationFailures)).ToJsonResult();
 
         }
     }

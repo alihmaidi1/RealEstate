@@ -26,7 +26,7 @@ public class ApiKeyAuthFilter: IAuthorizationFilter
         if (!context.HttpContext.Request.Headers.TryGetValue(AuthConstants.ApiKeyHeaderName, out var apiKey))
         {
          
-            context.Result=Result.Failure(Error.MissingApiKey).ToJsonResult(HttpStatusCode.Forbidden);
+            context.Result=Result.Failure(Error.MissingApiKey,HttpStatusCode.Forbidden).ToJsonResult();
             return; 
             
         }
@@ -34,7 +34,7 @@ public class ApiKeyAuthFilter: IAuthorizationFilter
         var ExistsApiKey = _configuration.GetValue<string>(AuthConstants.ApiKeySectionName);
         if (!ExistsApiKey.Equals(apiKey))
         {
-            context.Result=Result.Failure(Error.InvalidApiKey).ToJsonResult(HttpStatusCode.Forbidden);
+            context.Result=Result.Failure(Error.InvalidApiKey,HttpStatusCode.Forbidden).ToJsonResult();
             
         }
 

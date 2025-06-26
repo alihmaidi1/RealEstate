@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using RealEstate.Domain.Base;
 using RealEstate.Shared.Abstraction.Entities;
 using RealEstate.Shared.Abstraction.Entities.Entity;
 
@@ -17,6 +18,11 @@ public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : 
     {
 
         return await _context.Set<TEntity>().FindAsync(id);
+    }
+
+    public IQueryable<TEntity> GetQueryable()
+    {
+        return _context.Set<TEntity>().AsQueryable();
     }
 
     public async Task<IEnumerable<TEntity>> GetAllAsync()

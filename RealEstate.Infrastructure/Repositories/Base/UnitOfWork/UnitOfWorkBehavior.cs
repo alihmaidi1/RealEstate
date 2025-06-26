@@ -3,15 +3,17 @@
 using System.Transactions;
 using Microsoft.AspNetCore.Mvc;
 using RealEstate.Shared.Abstraction.CQRS;
+using RealEstate.Shared.OperationResult;
 
 namespace RealEstate.Infrastructure.Repositories.Base.UnitOfWork;
 
-public class UnitOfWorkBehavior <TCommand>(ICommandHandler<TCommand> innerHandler,IUnitOfWork _unitOfWork) : ICommandHandler<TCommand>
-    where TCommand : ICommand
+public class UnitOfWorkBehavior<TCommand>(IUnitOfWork _unitOfWork,ICommandHandler<TCommand> innerHandler) : ICommandHandler<TCommand>
+    where TCommand : ICommand  
 {
     
     
-    public async Task<JsonResult> Handle(TCommand request, CancellationToken cancellationToken)
+
+    public async Task<IActionResult> Handle(TCommand request, CancellationToken cancellationToken)
     {
         using (var transactionScope=new TransactionScope())
         {
@@ -24,4 +26,5 @@ public class UnitOfWorkBehavior <TCommand>(ICommandHandler<TCommand> innerHandle
             
         }
     }
+
 }

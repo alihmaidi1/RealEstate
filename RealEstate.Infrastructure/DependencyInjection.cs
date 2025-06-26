@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using RealEstate.Domain.Security;
 using RealEstate.Infrastructure.BackgroundServer;
 using RealEstate.Infrastructure.BackgroundServer.Filter;
+using RealEstate.Infrastructure.Repositories.Base.Security;
 using RealEstate.Infrastructure.Repositories.Base.UnitOfWork;
 using RealEstate.Infrastructure.Seed;
 
@@ -35,7 +36,10 @@ public static class DependencyInjection
         
         
         services.AddTransient<IArchiveService, ArchiveService>();
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
+        services.AddScoped<IAccountRepository, AccountRepository>();
 
+        
         services.AddDbContext<RealEstateDbContext>(option =>
         {
             option.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));

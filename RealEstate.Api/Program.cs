@@ -1,5 +1,7 @@
 ﻿using RealEstate.Application;
+using RealEstate.Domain.Security;
 using RealEstate.Infrastructure;
+using RealEstate.Infrastructure.Repositories.Base.Security;
 using RealEstate.Shared;
 using RealEstate.Shared.Abstraction.CQRS;
 using RealEstate.Shared.Middleware;
@@ -15,6 +17,9 @@ builder.Services.AddOpenApi();
 
 
 builder.Services.AddControllers();
+
+
+
 
 builder.Services.Scan(scan =>
     scan.FromAssemblies(AppDomain.CurrentDomain.GetAssemblies())
@@ -33,8 +38,10 @@ builder.Services.Scan(scan =>
 
 builder.Services.AddApiVersioning();
 builder.Services.AddLimitRate();
-builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddApplicationLayer();
+builder.Services.AddInfrastructure(builder.Configuration);
+
+
 builder.Services.AddSharedServices(builder.Configuration);
 builder.Services.AddSharedLayer();
 
@@ -49,6 +56,7 @@ await app.UseInfrastructure();
 
 // }
 app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
+app.UseMiddleware<RequestIdmiddleware>();
 
 app.UseMiddleware<LoggingMiddleware>();
 app.UseHttpsRedirection();

@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using RealEstate.Shared.OperationResult;
 
 namespace RealEstate.Shared.Abstraction.CQRS;
-public interface IQueryHandler<TCommand> where TCommand : IQuery
+public interface IQueryHandler<TCommand> where TCommand : IQuery 
 {
-    public Task<JsonResult> Handle(TCommand request, CancellationToken cancellationToken);
+    public Task<IActionResult> Handle(TCommand request, CancellationToken cancellationToken);
 
 }

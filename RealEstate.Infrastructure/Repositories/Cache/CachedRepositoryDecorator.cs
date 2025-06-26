@@ -1,5 +1,6 @@
 ﻿
 using Microsoft.Extensions.Caching.Memory;
+using RealEstate.Domain.Base;
 using RealEstate.Infrastructure.Repositories.Base.Repository;
 using RealEstate.Shared.Abstraction.Entities;
 using RealEstate.Shared.Abstraction.Entities.Entity;
@@ -48,6 +49,11 @@ public class CachedRepositoryDecorator<TEntity> : IBaseRepository<TEntity>
         _memoryCache.Set(cacheKey, entity, _cacheOptions);
 
         return entity;
+    }
+
+    public IQueryable<TEntity> GetQueryable()
+    {
+        return _innerRepository.GetQueryable();
     }
 
     public async Task<IEnumerable<TEntity>> GetAllAsync()

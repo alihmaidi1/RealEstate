@@ -1,5 +1,8 @@
 ﻿
+using System.Net;
 using Microsoft.AspNetCore.Mvc;
+using RealEstate.Contract.Auth.Admin.Login;
+using RealEstate.Shared.Abstraction.CQRS;
 using RealEstate.Shared.Filters;
 using RealEstate.Shared.OperationResult;
 using RealEstate.Shared.Security.SecretManager;
@@ -36,6 +39,12 @@ public class TestController : ControllerBase
         return Ok(token);
     }
 
+    
+    [HttpGet]
+    public async Task<IActionResult> RequestId()
+    {
+        return Ok("");
+    }
 
 
     [HttpGet]
@@ -53,6 +62,14 @@ public class TestController : ControllerBase
     }
     
     
+    [HttpGet]
+    
+    public async Task<IActionResult> Test12( [FromQuery]AdminLoginRequest uploadChunkRequest, [FromServices] ICommandHandler<AdminLoginRequest> commandHandler, CancellationToken cancellationToken)
+    {
+        return await commandHandler.Handle(uploadChunkRequest, cancellationToken);
+        
+    }
+
 
     [HttpPost]
     public async Task<IActionResult> WebHook()

@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using RealEstate.Shared.Abstraction.Entities;
-using RealEstate.Shared.Abstraction.Entities.Entity;
+﻿using RealEstate.Shared.Abstraction.Entities.Entity;
 
-namespace RealEstate.Infrastructure.Repositories.Base.Repository;
+namespace RealEstate.Domain.Base;
 
 public interface IBaseRepository<TEntity> where TEntity : IEntity
 {
     Task<TEntity?> GetByIdAsync(Guid id);
+    
+    IQueryable<TEntity> GetQueryable();
     Task<IEnumerable<TEntity>> GetAllAsync();
     Task AddAsync(TEntity entity);
     Task UpdateAsync(TEntity entity);

@@ -14,9 +14,9 @@ namespace RealEstate.Infrastructure.Repositories.Base.UnitOfWork;
 
 public class UnitOfWork : IUnitOfWork
 {
-    private readonly DbContext _context;
+    private readonly RealEstateDbContext _context;
 
-    public UnitOfWork(DbContext context)
+    public UnitOfWork(RealEstateDbContext context)
     {
         _context = context;
     }

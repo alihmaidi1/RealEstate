@@ -2,16 +2,17 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace RealEstate.Shared.OperationResult;
 
-public class TResult<TValue>: Result
+public class TResult<TValue>: Result 
 {
     private readonly TValue? _value;
 
-    public TResult(TValue? value, bool isSuccess, Error error)
-        : base(isSuccess, error)
+    public TResult(TValue? value, bool isSuccess, Error error,HttpStatusCode statusCode)
+        : base(isSuccess, error,statusCode)
     {
         _value = value;
     }

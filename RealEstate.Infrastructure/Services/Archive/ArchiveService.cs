@@ -44,7 +44,7 @@ public class ArchiveService: IArchiveService
             .FirstOrDefaultAsync(e => e.Id ==Id);
         
         if (entityWithRelations == null)
-            return Result.Failure<bool>(Error.NotFound("Entity not found"));
+            return Result.InternalFailure<bool>(Error.NotFound("Entity not found"));
 
         var jsonData = JsonSerializer.Serialize(entityWithRelations, jsonoptions);
         var archiveRecord = new ArchiveRecord
@@ -67,12 +67,12 @@ public class ArchiveService: IArchiveService
             .FirstOrDefaultAsync(a => a.EntityId == id && a.EntityName == typeof(TEntity).Name);
         
         if (archiveRecord == null)
-            return Result.Failure<TEntity>(Error.NotFound("Archived record not found"));
+            return Result.InternalFailure<TEntity>(Error.NotFound("Archived record not found"));
 
 
         var entity = JsonSerializer.Deserialize<TEntity>(archiveRecord.JsonData, jsonoptions);
         if (entity == null)
-            return Result.Failure<TEntity>(Error.Internal($"{typeof(TEntity).Name} Deserialization failed"));
+            return Result.InternalFailure<TEntity>(Error.Internal($"{typeof(TEntity).Name} Deserialization failed"));
         _context.Set<TEntity>().Add(entity);
         _context.ArchiveRecords.Remove(archiveRecord);
         return Result.Success(entity);
@@ -88,7 +88,7 @@ public class ArchiveService: IArchiveService
             .FirstOrDefaultAsync(a => a.EntityId == id && a.EntityName == typeof(TEntity).Name);
 
         if (archiveRecord == null)
-            return Result.Failure<bool>(Error.NotFound("Archived record not found"));
+            return Result.InternalFailure<bool>(Error.NotFound("Archived record not found"));
 
         _context.ArchiveRecords.Remove(archiveRecord);
 

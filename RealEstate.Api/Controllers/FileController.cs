@@ -11,13 +11,13 @@ namespace RealEstate.Api.Controllers;
 [ApiController]
 public class FileController
 {
-    [HttpPost]
-
-    public async Task<JsonResult> UploadChunk([FromBody] UploadChunkRequest uploadChunkRequest, [FromServices] ICommandHandler<UploadChunkRequest> commandHandler, CancellationToken cancellationToken)
-    {
-        return await commandHandler.Handle(uploadChunkRequest, cancellationToken);
-
-    }
+    // [HttpPost]
+    //
+    // public async Task<JsonResult> UploadChunk([FromBody] UploadChunkRequest uploadChunkRequest, [FromServices] ICommandHandler<UploadChunkRequest> commandHandler, CancellationToken cancellationToken)
+    // {
+    //     return await commandHandler.Handle(uploadChunkRequest, cancellationToken);
+    //
+    // }
 
 
 }
